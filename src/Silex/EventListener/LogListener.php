@@ -82,7 +82,7 @@ class LogListener implements EventSubscriberInterface
      */
     public function onKernelException(ExceptionEvent $event)
     {
-        $this->logException($event->getException());
+        $this->logException($event->getThrowable());
     }
 
     /**
@@ -114,7 +114,7 @@ class LogListener implements EventSubscriberInterface
     /**
      * Logs an exception.
      */
-    protected function logException(\Exception $e)
+    protected function logException(\Throwable $e)
     {
         $this->logger->log(call_user_func($this->exceptionLogFilter, $e), sprintf('%s: %s (uncaught exception) at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()), ['exception' => $e]);
     }

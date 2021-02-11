@@ -11,11 +11,11 @@
 
 namespace Silex;
 
-use Symfony\Component\Debug\ExceptionHandler as DebugExceptionHandler;
-use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\ErrorHandler\ErrorHandler as DebugExceptionHandler;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -32,11 +32,11 @@ class ExceptionHandler implements EventSubscriberInterface
         $this->debug = $debug;
     }
 
-    public function onSilexError(GetResponseForExceptionEvent $event)
+    public function onSilexError(ExceptionEvent $event)
     {
         $handler = new DebugExceptionHandler($this->debug);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         if (!$exception instanceof FlattenException) {
             $exception = FlattenException::create($exception);
         }
